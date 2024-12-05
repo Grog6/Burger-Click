@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Burger Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+            background-color: lightblue;
+        }
+
+        #game-container {
+            margin-top: 100px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        #left-upgrades, #right-upgrades {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        button {
+            padding: 15px 30px;
+            font-size: 20px;
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+        }
+
+        button img {
+            width: 500px;
+            height: auto;
+            transition: transform 0.1s;
+        }
+
+        button img.shake {
+            transform: rotate(-10deg) translateY(-5px);
+            animation: shake 0.9s ease-in-out 3;
+        }
+
+        @keyframes shake {
+            0% { transform: translateY(0); }
+            25% { transform: translateY(-500px); }
+            50% { transform: translateY(500px); }
+            75% { transform: translateY(-500px); }
+            100% { transform: translateY(0); }
+        }
+
+        #score {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .upgrade {
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .upgrade:disabled {
+            background-color: #6c757d;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+    <h1>Burger Game</h1>
+    <div id="score">Burger Points: 0</div>
+    <div id="game-container">
+        <div id="left-upgrades">
+            <button class="upgrade" id="plus-2" disabled>+2 Points per Click (Cost: 50)</button>
+            <button class="upgrade" id="plus-5" disabled>+5 Points per Click (Cost: 200)</button>
+            <button class="upgrade" id="plus-10" disabled>+10 Points per Click (Cost: 500)</button>
+            <button class="upgrade" id="plus-50" disabled>+50 Points per Click (Cost: 2000)</button>
+            <button class="upgrade" id="plus-100" disabled>+100 Points per Click (Cost: 5000)</button>
+        </div>
+        <button id="click-button"><img src="burger.png" alt="Click Me"></button>
+        <div id="right-upgrades">
+            <button class="upgrade" id="auto-1" disabled>+1 Auto Click per Second (Cost: 100)</button>
+            <button class="upgrade" id="auto-5" disabled>+5 Auto Clicks per Second (Cost: 500)</button>
+            <button class="upgrade" id="auto-10" disabled>+10 Auto Clicks per Second (Cost: 1000)</button>
+            <button class="upgrade" id="auto-50" disabled>+50 Auto Clicks per Second (Cost: 5000)</button>
+            <button class="upgrade" id="auto-100" disabled>+100 Auto Clicks per Second (Cost: 10000)</button>
+        </div>
+    </div>
+    <script>
+        let score = 0;
+        let pointsPerClick = 1;
+        let autoClicksPerSecond = 0;
+
+        const scoreDisplay = document.getElementById('score');
+        const clickButton = document.getElementById('click-button');
+        const upgrades = {
+            "plus-2": { cost: 50, value: 2 },
+            "plus-5": { cost: 200, value: 5 },
+            "plus-10": { cost: 500, value: 10 },
+            "plus-50": { cost: 2000, value: 50 },
+            "plus-100": { cost: 5000, value: 100 },
+            "auto-1": { cost: 100, value: 1 },
+            "auto-5": { cost: 500, value: 5 },
+            "auto-10": { cost: 1000, value: 10 },
+            "auto-50": { cost: 5000, value: 50 },
+            "auto-100": { cost: 10000, value: 100 }
+        };
+
+        function updateScoreDisplay() {
+            scoreDisplay.textContent = `Burger Points: ${score}`;
+            for (const [id, upgrade] of Object.entries(upgrades)) {
+                const button = document.getElementById(id);
+                button.disabled = score < upgrade.cost;
+                button.textContent = `${button.textContent.split('(')[0]}(Cost: ${upgrade.cost})`;
+            }
+        }
+
+        clickButton.addEventListener('click', () => {
+            score += pointsPerClick;
+            updateScoreDisplay();
+        });
+
+        document.addEventListener('keydown', (event) => {
+            if (event.code === 'Space') {
+                event.preventDefault();
+                clickButton.click();
+            }
+        });
+
+        for (const [id, upgrade] of Object.entries(upgrades)) {
+            const button = document.getElementById(id);
+            button.addEventListener('click', () => {
+                if (score >= upgrade.cost) {
+                    score -= upgrade.cost;
+                    upgrade.cost = Math.floor(upgrade.cost * 8.5);
+
+                    if (id.startsWith('plus')) {
+                        pointsPerClick += upgrade.value;
+                    } else {
+                        autoClicksPerSecond += upgrade.value;
+                        if (autoClicksPerSecond === upgrade.value) {
+                            setInterval(() => {
+                                score += autoClicksPerSecond;
+                                updateScoreDisplay();
+                            }, 1000);
+                        }
+                    }
+                    updateScoreDisplay();
+                }
+            });
+        }
+
+        updateScoreDisplay();
+
+                    // Add shake class to image
+            image.classList.add('shake');
+
+            // Remove shake class after animation
+            setTimeout(() => {
+                image.classList.remove('shake');
+            }, 200);
+
+
+    </script>
+</body>
+</html>
