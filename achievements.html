@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Burger Game Achievements</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 20px;
+            text-align: center;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        .achievement {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 10px auto;
+            padding: 10px 20px;
+            width: 80%;
+            max-width: 600px;
+            background-color: #e0e0e0;
+            border-radius: 10px;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .achievement.unlocked {
+            background-color: #c0ffc0;
+        }
+
+        .achievement.locked {
+            background-color: #f0c0c0;
+            opacity: 0.6;
+        }
+
+        .achievement-name {
+            font-size: 18px;
+        }
+
+        .achievement-status {
+            font-size: 16px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>Burger Game Achievements</h1>
+    <div id="achievements-container">
+        <!-- Achievements will be dynamically added here -->
+    </div>
+
+    <script>
+        const achievements = [
+            { id: "firstClick", name: "First Click!", condition: () => score >= 1, unlocked: false },
+            { id: "burgerFanatic", name: "Burger Fanatic!", condition: () => score >= 1000, unlocked: false },
+            { id: "bugSquasher", name: "Bug Squasher!", condition: () => bugsSquashed >= 5, unlocked: false }
+        ];
+
+        let score = 0; // Placeholder for the score variable from the game
+        let bugsSquashed = 0; // Placeholder for tracking bugs squashed
+
+        function updateAchievements() {
+            const achievementsContainer = document.getElementById("achievements-container");
+            achievementsContainer.innerHTML = ""; // Clear the container
+
+            achievements.forEach(achievement => {
+                if (achievement.condition() && !achievement.unlocked) {
+                    achievement.unlocked = true;
+                    alert(`Achievement Unlocked: ${achievement.name}`);
+                }
+
+                const achievementDiv = document.createElement("div");
+                achievementDiv.className = `achievement ${achievement.unlocked ? "unlocked" : "locked"}`;
+                
+                achievementDiv.innerHTML = `
+                    <span class="achievement-name">${achievement.name}</span>
+                    <span class="achievement-status">${achievement.unlocked ? "Unlocked" : "Locked"}</span>
+                `;
+                
+                achievementsContainer.appendChild(achievementDiv);
+            });
+        }
+
+        // Simulate periodic updates to the achievements page
+        setInterval(updateAchievements, 1000);
+    </script>
+</body>
+</html>
